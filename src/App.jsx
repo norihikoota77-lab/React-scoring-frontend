@@ -8,15 +8,6 @@ import ResultMessage from "./components/ResultMessage";
 import HistoryChart from "./components/HistoryChart";
 import heroImage from "./assets/hero_top.png";
 
-export default function App() {
-  const [correctFile, setCorrectFile] = useState(null);
-  const [userFile, setUserFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
-  const [histories, setHistories] = useState([]);
-  const [selectedUser, setSelectedUser] = useState("ALL");
-  const [selectedExam, setSelectedExam] = useState("ALL"); // ★追加
-  const [selectedHistory, setSelectedHistory] = useState(null);
 
   {/* ヒーロー画像 */}
 <div className="mb-8 rounded-3xl overflow-hidden shadow-2xl">
@@ -26,6 +17,16 @@ export default function App() {
     className="w-full object-cover h-64 md:h-80"
   />
 </div>
+
+export default function App() {
+  const [correctFile, setCorrectFile] = useState(null);
+  const [userFile, setUserFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
+  const [histories, setHistories] = useState([]);
+  const [selectedUser, setSelectedUser] = useState("ALL");
+  const [selectedExam, setSelectedExam] = useState("ALL"); // ★追加
+  const [selectedHistory, setSelectedHistory] = useState(null);
 
   const fetchHistories = async () => {
     try {

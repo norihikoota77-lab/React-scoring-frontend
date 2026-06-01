@@ -18,7 +18,7 @@ export default function App() {
   const [selectedUser, setSelectedUser] = useState("ALL");
   const [selectedExam, setSelectedExam] = useState("ALL"); // ★追加
   const [selectedHistory, setSelectedHistory] = useState(null);
-
+  const [passScore, setPassScore] = useState(70); // ★合格点の状態を追加   
   const fetchHistories = async () => {
     try {
       const response = await fetch("https://react-scoring-backend.onrender.com/api/history/");
@@ -123,7 +123,9 @@ export default function App() {
           setUserFile={setUserFile}
           handleSubmit={handleSubmit}
           loading={loading}
-        />
+          passScore={passScore}
+          setPassScore={setPassScore}
+ />
 
         {result && (
           <>
@@ -135,16 +137,20 @@ export default function App() {
                 <p className="text-slate-300 text-lg">{result.exam_title}</p>
               </div>
               <div className="grid md:grid-cols-3 gap-6 mb-8">
-                <ScoreCard title="スコア" value={result.score} />
+                <ScoreCard 
+                  title="スコア" value={result.score}
+                  sub={`/ ${result.valid_count}`}  
+                />
                 <ScoreCard
                   title="正答率"
                   value={`${Number(result.percentage).toFixed(1)}%`}
                   color="text-red-400"
                 />
                 <ScoreCard
-                  title="ランク"
-                  value={result.rank}
-                  color="text-yellow-300"
+                  title="判定"
+                  value={Number(result.percentage) >= passScore ? "✅ 合格" : "❌ 不合格"}
+                  color={Number(result.percentage) >= passScore ? "text-green-400" : "text-red-400"}
+                  size="text-4xl"  // ★追加
                 />
               </div>
               <ResultMessage rank={result.rank} message={result.msg} />

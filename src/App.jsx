@@ -145,7 +145,16 @@ export default function App() {
 
         {/* Excel採点モード */}
         {mode === "excel" && (
-          <UploadCard ... />
+          <UploadCard
+            correctFile={correctFile}
+            userFile={userFile}
+            setCorrectFile={setCorrectFile}
+            setUserFile={setUserFile}
+            handleSubmit={handleSubmit}
+            loading={loading}
+            passScore={passScore}
+            setPassScore={setPassScore}
+           />
         )}
 
         {/* Web解答モード */}
@@ -156,16 +165,6 @@ export default function App() {
           />
         )}
 
-        <UploadCard
-          correctFile={correctFile}
-          userFile={userFile}
-          setCorrectFile={setCorrectFile}
-          setUserFile={setUserFile}
-          handleSubmit={handleSubmit}
-          loading={loading}
-          passScore={passScore}
-          setPassScore={setPassScore}
-        />
 
         {result && (
           <>

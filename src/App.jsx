@@ -8,6 +8,7 @@ import ResultMessage from "./components/ResultMessage";
 import HistoryChart from "./components/HistoryChart";
 import heroImage from "./assets/hero_top.png";
 import AnswerSheet from "./components/AnswerSheet";
+import WebExamCard from "./components/WebExamCard"
 
 export default function App() {
   const [mode, setMode] = useState("excel"); // "excel" or "web"

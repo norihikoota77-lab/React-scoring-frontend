@@ -5,13 +5,65 @@ import {
 
 const COLORS = ["#4ade80", "#f87171"];
 
-export default function Dashboard({ histories }) {
+export default function Dashboard({
+  histories,
+  users,
+  exams,
+  selectedUser,
+  selectedExam,
+  setSelectedUser,
+  setSelectedExam,
+}) {
+
+  const tooltipStyle = {
+    contentStyle: { backgroundColor: "#1e293b", border: "none", borderRadius: "8px" },
+    labelStyle: { color: "#fff" },
+  };
+
+  // ============================================================
+  // フィルター
+  // ============================================================
+  const FilterBar = () => (
+    <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 mb-6 flex flex-wrap gap-3 items-center">
+      <span className="text-slate-300 text-sm font-bold">🔍 フィルター</span>
+      <select
+        value={selectedUser}
+        onChange={(e) => setSelectedUser(e.target.value)}
+        className="bg-slate-800 border border-white/20 px-4 py-2 rounded-xl text-white text-sm"
+      >
+        {users.map((user) => (
+          <option key={user} value={user}>{user}</option>
+        ))}
+      </select>
+      <select
+        value={selectedExam}
+        onChange={(e) => setSelectedExam(e.target.value)}
+        className="bg-slate-800 border border-white/20 px-4 py-2 rounded-xl text-white text-sm"
+      >
+        {exams.map((exam) => (
+          <option key={exam} value={exam}>{exam}</option>
+        ))}
+      </select>
+      {(selectedUser !== "ALL" || selectedExam !== "ALL") && (
+        <button
+          onClick={() => { setSelectedUser("ALL"); setSelectedExam("ALL"); }}
+          className="bg-red-500/20 hover:bg-red-500/40 border border-red-400/30 px-3 py-2 rounded-xl text-red-300 text-sm transition"
+        >
+          ✕ リセット
+        </button>
+      )}
+      <span className="text-slate-400 text-sm ml-auto">{histories.length} 件</span>
+    </div>
+  );
 
   if (!histories || histories.length === 0) {
     return (
-      <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 text-center text-slate-300">
-        <p className="text-2xl mb-2">📊</p>
-        <p>採点履歴がありません</p>
+      <div>
+        <FilterBar />
+        <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 text-center text-slate-300">
+          <p className="text-2xl mb-2">📊</p>
+          <p>採点履歴がありません</p>
+        </div>
       </div>
     );
   }
@@ -61,13 +113,11 @@ export default function Dashboard({ histories }) {
   const rankChartData = Object.entries(rankMap).map(([rank, count]) => ({ name: rank, count }));
   const rankColors = { S: "#F1C40F", A: "#4ade80", B: "#60a5fa", C: "#f87171" };
 
-  const tooltipStyle = {
-    contentStyle: { backgroundColor: "#1e293b", border: "none", borderRadius: "8px" },
-    labelStyle: { color: "#fff" },
-  };
-
   return (
     <div className="space-y-4 md:space-y-6">
+
+      {/* フィルター */}
+      <FilterBar />
 
       {/* 集計カード */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
@@ -90,8 +140,6 @@ export default function Dashboard({ histories }) {
 
       {/* 棒グラフ2つ横並び */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-
-        {/* 受験者ごとの平均正答率 */}
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-5 md:p-6 shadow-2xl">
           <h3 className="text-base md:text-xl font-bold mb-4">👤 受験者ごとの平均正答率</h3>
           <div className="h-[200px] md:h-[320px]">
@@ -108,7 +156,6 @@ export default function Dashboard({ histories }) {
           </div>
         </div>
 
-        {/* 試験ごとの平均正答率 */}
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-5 md:p-6 shadow-2xl">
           <h3 className="text-base md:text-xl font-bold mb-4">📝 試験ごとの平均正答率</h3>
           <div className="h-[200px] md:h-[320px]">
@@ -124,13 +171,10 @@ export default function Dashboard({ histories }) {
             </ResponsiveContainer>
           </div>
         </div>
-
       </div>
 
-      {/* 円グラフ＋ランク分布 横並び */}
+      {/* 円グラフ＋ランク分布 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-
-        {/* 合格・不合格 */}
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-5 md:p-6 shadow-2xl">
           <h3 className="text-base md:text-xl font-bold mb-4">✅ 合格・不合格の割合</h3>
           <div className="h-[200px] md:h-[280px]">
@@ -158,7 +202,6 @@ export default function Dashboard({ histories }) {
           </div>
         </div>
 
-        {/* ランク分布 */}
         <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-5 md:p-6 shadow-2xl">
           <h3 className="text-base md:text-xl font-bold mb-4">🏆 ランク分布</h3>
           <div className="h-[200px] md:h-[280px]">
@@ -178,7 +221,6 @@ export default function Dashboard({ histories }) {
             </ResponsiveContainer>
           </div>
         </div>
-
       </div>
 
     </div>

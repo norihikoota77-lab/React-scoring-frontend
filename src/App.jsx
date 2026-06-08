@@ -205,7 +205,15 @@ export default function App() {
 
         {/* ダッシュボードモード */}
         {mode === "dashboard" && (
-          <Dashboard histories={filteredHistories} />
+          <Dashboard
+            histories={filteredHistories}
+            users={users}
+            exams={exams}
+            selectedUser={selectedUser}
+            selectedExam={selectedExam}
+            setSelectedUser={setSelectedUser}
+            setSelectedExam={setSelectedExam}
+          />
         )}
 
 

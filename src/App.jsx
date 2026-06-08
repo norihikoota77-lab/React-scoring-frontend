@@ -200,7 +200,12 @@ export default function App() {
 
         {/* Web解答モード */}
         {mode === "web" && (
-          <WebExamCard setResult={setResult} fetchHistories={fetchHistories} />
+          <WebExamCard
+            setResult={setResult}
+            fetchHistories={fetchHistories}
+            users={users.filter((u) => u !== "ALL")}
+            exams={exams.filter((e) => e !== "ALL")}
+          />
         )}
 
         {/* ダッシュボードモード */}

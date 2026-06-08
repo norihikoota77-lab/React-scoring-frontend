@@ -5,7 +5,7 @@ const API_BASE = "https://react-scoring-backend.onrender.com";
 const NUMERIC_CHOICES = ["1", "2", "3", "4", "5"];
 const ALPHA_CHOICES = ["A", "B", "C", "D", "E"];
 
-export default function WebExamCard({ setResult, fetchHistories, users = [], exams = [] }) {
+export default function WebExamCard({ setResult, fetchHistories, users = [], exams: examOptions = [] }) {
   const [step, setStep] = useState("setup");
   const [userName, setUserName] = useState("");
   const [examTitle, setExamTitle] = useState("");
@@ -179,9 +179,9 @@ export default function WebExamCard({ setResult, fetchHistories, users = [], exa
             placeholder="例：坂井"
             className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
           />
-          <datalist id="user-list">
-            {users.map((user) => (
-              <option key={user} value={user} />
+          <datalist id="exam-list">
+            {examOptions.map((exam) => (
+              <option key={exam} value={exam} />
             ))}
           </datalist>
         </div>

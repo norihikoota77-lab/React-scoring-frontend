@@ -47,17 +47,20 @@ export default function WebExamCard({
       setChoiceType(exam.choice_type === "alpha" ? "alpha" : "numeric");
       setQuestionCount(exam.question_count);
 
-      // ★問題文を取得
-      fetch(`${API_BASE}/api/exams/${examId}/questions/`)
-        .then((res) => res.json())
-        .then((data) => {
-          const texts = {};
-          data.questions.forEach((q) => {
-            texts[q.number] = q.text;
-          });
-          setQuestionTexts(texts);
-        })
-        .catch((err) => console.error(err));
+      if (exam.show_questions) {
+        fetch(`${API_BASE}/api/exams/${examId}/questions/`)
+          .then((res) => res.json())
+          .then((data) => {
+            const texts = {};
+            data.questions.forEach((q) => {
+              texts[q.number] = q.text;
+            });
+            setQuestionTexts(texts);
+          })
+          .catch((err) => console.error(err));
+      } else {
+        setQuestionTexts({}); // 問題文なしの場合はクリア
+      }
     }
   };
 

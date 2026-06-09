@@ -1,12 +1,20 @@
-import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const API_BASE = "https://react-scoring-backend.onrender.com";
 
 const NUMERIC_CHOICES = ["1", "2", "3", "4", "5"];
 const ALPHA_CHOICES = ["A", "B", "C", "D", "E"];
 
-export default function WebExamCard({ setResult, fetchHistories, users = [], exams: examOptions = [] }) {
+export default function WebExamCard({
+  setResult,
+  fetchHistories,
+  users = [],
+  exams: examOptions = [],
+}) {
   const [step, setStep] = useState("setup");
+  const [questionTexts, setQuestionTexts] = useState({});
   const [userName, setUserName] = useState("");
   const [examTitle, setExamTitle] = useState("");
   const [questionCount, setQuestionCount] = useState(40);
@@ -37,6 +45,18 @@ export default function WebExamCard({ setResult, fetchHistories, users = [], exa
       setExamTitle(exam.title);
       setChoiceType(exam.choice_type === "alpha" ? "alpha" : "numeric");
       setQuestionCount(exam.question_count);
+
+      // ★問題文を取得
+      fetch(`${API_BASE}/api/exams/${examId}/questions/`)
+        .then((res) => res.json())
+        .then((data) => {
+          const texts = {};
+          data.questions.forEach((q) => {
+            texts[q.number] = q.text;
+          });
+          setQuestionTexts(texts);
+        })
+        .catch((err) => console.error(err));
     }
   };
 
@@ -124,40 +144,76 @@ export default function WebExamCard({ setResult, fetchHistories, users = [], exa
     }
   };
 
-  const renderQuestionCard = (qNum) => (
-    <div
-      key={qNum}
-      className={`border rounded-2xl p-4 transition ${
-        answers[qNum]
-          ? "border-green-400/50 bg-green-500/10"
-          : "border-white/20 bg-white/5"
-      }`}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <span className="font-bold text-slate-300">問題 {qNum}</span>
-        {answers[qNum] && (
-          <span className="text-green-400 font-bold text-sm">
-            ✓ {answers[qNum]}
-          </span>
+  const renderQuestionCard = (qNum) => {
+    const question = questionTexts[qNum];
+    return (
+      <div
+        key={qNum}
+        className={`border rounded-2xl p-4 transition ${
+          answers[qNum]
+            ? "border-green-400/50 bg-green-500/10"
+            : "border-white/20 bg-white/5"
+        }`}
+      >
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-bold text-slate-300">問題 {qNum}</span>
+          {answers[qNum] && (
+            <span className="text-green-400 font-bold text-sm">
+              ✓ {answers[qNum]}
+            </span>
+          )}
+        </div>
+
+        {/* 問題文（Markdown表示） */}
+        {question && (
+          <div className="mb-3 text-sm text-slate-200 prose prose-invert max-w-none">
+            <ReactMarkdown
+              components={{
+                code({ node, inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      style={vscDarkPlus}
+                      language={match[1]}
+                      PreTag="div"
+                      {...props}
+                    >
+                      {String(children).replace(/\n$/, "")}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code
+                      className="bg-slate-700 px-1 rounded text-red-300"
+                      {...props}
+                    >
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {question}
+            </ReactMarkdown>
+          </div>
         )}
+
+        <div className="flex gap-2">
+          {choices.map((choice) => (
+            <button
+              key={choice}
+              onClick={() => handleAnswer(qNum, choice)}
+              className={`flex-1 py-2 rounded-xl font-bold text-sm transition ${
+                answers[qNum] === choice
+                  ? "bg-red-500 text-white scale-105"
+                  : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+              }`}
+            >
+              {choice}
+            </button>
+          ))}
+        </div>
       </div>
-      <div className="flex gap-2">
-        {choices.map((choice) => (
-          <button
-            key={choice}
-            onClick={() => handleAnswer(qNum, choice)}
-            className={`flex-1 py-2 rounded-xl font-bold text-sm transition ${
-              answers[qNum] === choice
-                ? "bg-red-500 text-white scale-105"
-                : "bg-slate-700 text-slate-300 hover:bg-slate-600"
-            }`}
-          >
-            {choice}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+    );
+  };
 
   // ============================================================
   // STEP 1：セットアップ画面
@@ -169,22 +225,24 @@ export default function WebExamCard({ setResult, fetchHistories, users = [], exa
 
         <div className="grid md:grid-cols-2 gap-6 mb-6">
           {/* 受験者名 */}
-        <div>
-          <label className="text-slate-300 text-sm font-bold mb-2 block">受験者名</label>
-          <input
-            type="text"
-            list="user-list"
-            value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            placeholder="例：坂井"
-            className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
-          />
-          <datalist id="exam-list">
-            {examOptions.map((exam) => (
-              <option key={exam} value={exam} />
-            ))}
-          </datalist>
-        </div>
+          <div>
+            <label className="text-slate-300 text-sm font-bold mb-2 block">
+              受験者名
+            </label>
+            <input
+              type="text"
+              list="user-list"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              placeholder="例：坂井"
+              className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
+            />
+            <datalist id="exam-list">
+              {examOptions.map((exam) => (
+                <option key={exam} value={exam} />
+              ))}
+            </datalist>
+          </div>
 
           {/* 正解マスタモード切り替え */}
           <div>
@@ -240,7 +298,9 @@ export default function WebExamCard({ setResult, fetchHistories, users = [], exa
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             {/* 試験名 */}
             <div>
-              <label className="text-slate-300 text-sm font-bold mb-2 block">試験名</label>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">
+                試験名
+              </label>
               <input
                 type="text"
                 list="exam-list"

@@ -279,74 +279,34 @@ export default function WebExamCard({
           </div>
         </div>
 
+
         {/* 登録済みマスタモード */}
         {masterMode === "db" ? (
-          <div className="mb-6">
-            <label className="text-slate-300 text-sm font-bold mb-2 block">
-              試験を選択
-            </label>
-            <select
-              value={selectedExamId}
-              onChange={(e) => handleExamSelect(e.target.value)}
-              className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
-            >
-              <option value="">-- 試験を選択してください --</option>
-              {exams.map((exam) => (
-                <option key={exam.id} value={exam.id}>
-                  {exam.title}（{exam.question_count}問・
-                  {exam.choice_type === "alpha" ? "A〜E" : "1〜5"}）
-                </option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* 試験名 */}
+          <div className="mb-6 space-y-4">
             <div>
-              <label className="text-slate-300 text-sm font-bold mb-2 block">
-                試験名
-              </label>
-              <input
-                type="text"
-                list="exam-list"
-                value={examTitle}
-                onChange={(e) => setExamTitle(e.target.value)}
-                placeholder="例：python模擬試験"
+              <label className="text-slate-300 text-sm font-bold mb-2 block">試験を選択</label>
+              <select
+                value={selectedExamId}
+                onChange={(e) => handleExamSelect(e.target.value)}
                 className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
-              />
-              <datalist id="exam-list">
+              >
+                <option value="">-- 試験を選択してください --</option>
                 {exams.map((exam) => (
-                  <option key={exam} value={exam} />
+                  <option key={exam.id} value={exam.id}>
+                    {exam.title}（{exam.question_count}問・{exam.choice_type === "alpha" ? "A〜E" : "1〜5"}）
+                  </option>
                 ))}
-              </datalist>
+              </select>
             </div>
 
-            {/* 問題数 */}
+            {/* ★問題文の表示（追加） */}
             <div>
-              <label className="text-slate-300 text-sm font-bold mb-2 block">
-                問題数
-              </label>
-              <input
-                type="number"
-                value={questionCount}
-                onChange={(e) => setQuestionCount(Number(e.target.value))}
-                min="1"
-                max="200"
-                className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
-              />
-            </div>
-
-            <div>
-              <label className="text-slate-300 text-sm font-bold mb-2 block">
-                問題文の表示
-              </label>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">問題文の表示</label>
               <div className="flex gap-3">
                 <button
                   onClick={() => setShowQuestions(true)}
                   className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    showQuestions
-                      ? "bg-red-500 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   📖 表示する
@@ -354,9 +314,7 @@ export default function WebExamCard({
                 <button
                   onClick={() => setShowQuestions(false)}
                   className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    !showQuestions
-                      ? "bg-red-500 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    !showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   🔢 解答のみ
@@ -364,18 +322,14 @@ export default function WebExamCard({
               </div>
             </div>
 
-            {/* 選択肢タイプ */}
+            {/* ★選択肢タイプ（追加） */}
             <div>
-              <label className="text-slate-300 text-sm font-bold mb-2 block">
-                選択肢タイプ
-              </label>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">選択肢タイプ</label>
               <div className="flex gap-3">
                 <button
                   onClick={() => setChoiceType("numeric")}
                   className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    choiceType === "numeric"
-                      ? "bg-red-500 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    choiceType === "numeric" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   1〜5
@@ -383,9 +337,7 @@ export default function WebExamCard({
                 <button
                   onClick={() => setChoiceType("alpha")}
                   className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    choiceType === "alpha"
-                      ? "bg-red-500 text-white"
-                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                    choiceType === "alpha" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
                   }`}
                 >
                   A〜E
@@ -393,7 +345,8 @@ export default function WebExamCard({
               </div>
             </div>
           </div>
-        )}
+        ) : (
+
 
         <button
           onClick={handleSetup}

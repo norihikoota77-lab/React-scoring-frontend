@@ -282,8 +282,9 @@ export default function WebExamCard({
 
         {/* 登録済みマスタモード */}
         {masterMode === "db" && (
-          <div className="mb-6 space-y-4">
-            <div>
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            {/* 試験を選択（2列分使う） */}
+            <div className="md:col-span-2">
               <label className="text-slate-300 text-sm font-bold mb-2 block">試験を選択</label>
               <select
                 value={selectedExamId}
@@ -298,6 +299,7 @@ export default function WebExamCard({
                 ))}
               </select>
             </div>
+            {/* 問題文の表示 */}
             <div>
               <label className="text-slate-300 text-sm font-bold mb-2 block">問題文の表示</label>
               <div className="flex gap-3">
@@ -305,6 +307,7 @@ export default function WebExamCard({
                 <button onClick={() => setShowQuestions(false)} className={`flex-1 py-3 rounded-xl font-bold transition ${!showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>🔢 解答のみ</button>
               </div>
             </div>
+            {/* 選択肢タイプ */}
             <div>
               <label className="text-slate-300 text-sm font-bold mb-2 block">選択肢タイプ</label>
               <div className="flex gap-3">

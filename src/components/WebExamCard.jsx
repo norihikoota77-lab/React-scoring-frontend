@@ -281,7 +281,7 @@ export default function WebExamCard({
 
 
         {/* 登録済みマスタモード */}
-        {masterMode === "db" ? (
+        {masterMode === "db" && (
           <div className="mb-6 space-y-4">
             <div>
               <label className="text-slate-300 text-sm font-bold mb-2 block">試験を選択</label>
@@ -298,54 +298,53 @@ export default function WebExamCard({
                 ))}
               </select>
             </div>
-
-            {/* ★問題文の表示（追加） */}
             <div>
               <label className="text-slate-300 text-sm font-bold mb-2 block">問題文の表示</label>
               <div className="flex gap-3">
-                <button
-                  onClick={() => setShowQuestions(true)}
-                  className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  📖 表示する
-                </button>
-                <button
-                  onClick={() => setShowQuestions(false)}
-                  className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    !showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  🔢 解答のみ
-                </button>
+                <button onClick={() => setShowQuestions(true)} className={`flex-1 py-3 rounded-xl font-bold transition ${showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>📖 表示する</button>
+                <button onClick={() => setShowQuestions(false)} className={`flex-1 py-3 rounded-xl font-bold transition ${!showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>🔢 解答のみ</button>
               </div>
             </div>
-
-            {/* ★選択肢タイプ（追加） */}
             <div>
               <label className="text-slate-300 text-sm font-bold mb-2 block">選択肢タイプ</label>
               <div className="flex gap-3">
-                <button
-                  onClick={() => setChoiceType("numeric")}
-                  className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    choiceType === "numeric" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  1〜5
-                </button>
-                <button
-                  onClick={() => setChoiceType("alpha")}
-                  className={`flex-1 py-3 rounded-xl font-bold transition ${
-                    choiceType === "alpha" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"
-                  }`}
-                >
-                  A〜E
-                </button>
+                <button onClick={() => setChoiceType("numeric")} className={`flex-1 py-3 rounded-xl font-bold transition ${choiceType === "numeric" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>1〜5</button>
+                <button onClick={() => setChoiceType("alpha")} className={`flex-1 py-3 rounded-xl font-bold transition ${choiceType === "alpha" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>A〜E</button>
               </div>
             </div>
           </div>
-        ) : (
+        )}
+
+        {/* アップロードモード */}
+        {masterMode === "upload" && (
+          <div className="grid md:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">試験名</label>
+              <input type="text" list="exam-list" value={examTitle} onChange={(e) => setExamTitle(e.target.value)} placeholder="例：python模擬試験" className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white" />
+              <datalist id="exam-list">
+                {exams.map((exam) => (<option key={exam.id} value={exam.title} />))}
+              </datalist>
+            </div>
+            <div>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">問題数</label>
+              <input type="number" value={questionCount} onChange={(e) => setQuestionCount(Number(e.target.value))} min="1" max="200" className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white" />
+            </div>
+            <div>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">問題文の表示</label>
+              <div className="flex gap-3">
+                <button onClick={() => setShowQuestions(true)} className={`flex-1 py-3 rounded-xl font-bold transition ${showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>📖 表示する</button>
+                <button onClick={() => setShowQuestions(false)} className={`flex-1 py-3 rounded-xl font-bold transition ${!showQuestions ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>🔢 解答のみ</button>
+              </div>
+            </div>
+            <div>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">選択肢タイプ</label>
+              <div className="flex gap-3">
+                <button onClick={() => setChoiceType("numeric")} className={`flex-1 py-3 rounded-xl font-bold transition ${choiceType === "numeric" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>1〜5</button>
+                <button onClick={() => setChoiceType("alpha")} className={`flex-1 py-3 rounded-xl font-bold transition ${choiceType === "alpha" ? "bg-red-500 text-white" : "bg-slate-800 text-slate-300 hover:bg-slate-700"}`}>A〜E</button>
+              </div>
+            </div>
+          </div>
+        )}
 
 
         <button

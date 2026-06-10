@@ -26,6 +26,7 @@ export default function WebExamCard({
   const [masterMode, setMasterMode] = useState("upload"); // "upload" or "db"
   const [exams, setExams] = useState([]);
   const [selectedExamId, setSelectedExamId] = useState("");
+  const [showQuestions, setShowQuestions] = useState(true);
   const correctInputRef = useRef(null);
 
   const choices = choiceType === "numeric" ? NUMERIC_CHOICES : ALPHA_CHOICES;
@@ -168,8 +169,8 @@ export default function WebExamCard({
           )}
         </div>
 
-        {/* 問題文（Markdown表示） */}
-        {question && (
+        {/* 問題文（showQuestionsがtrueの時のみ表示） */}
+        {showQuestions && question && (
           <div className="mb-3 text-sm text-slate-200 prose prose-invert max-w-none">
             <ReactMarkdown
               components={{
@@ -334,6 +335,35 @@ export default function WebExamCard({
                 className="w-full bg-slate-800 border border-white/20 px-4 py-3 rounded-xl text-white"
               />
             </div>
+
+            <div>
+              <label className="text-slate-300 text-sm font-bold mb-2 block">
+                問題文の表示
+              </label>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowQuestions(true)}
+                  className={`flex-1 py-3 rounded-xl font-bold transition ${
+                    showQuestions
+                      ? "bg-red-500 text-white"
+                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  }`}
+                >
+                  📖 表示する
+                </button>
+                <button
+                  onClick={() => setShowQuestions(false)}
+                  className={`flex-1 py-3 rounded-xl font-bold transition ${
+                    !showQuestions
+                      ? "bg-red-500 text-white"
+                      : "bg-slate-800 text-slate-300 hover:bg-slate-700"
+                  }`}
+                >
+                  🔢 解答のみ
+                </button>
+              </div>
+            </div>
+
             {/* 選択肢タイプ */}
             <div>
               <label className="text-slate-300 text-sm font-bold mb-2 block">

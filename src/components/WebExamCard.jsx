@@ -414,14 +414,20 @@ export default function WebExamCard({
 
         <p className="text-slate-300 text-sm mb-6">受験者：{userName}</p>
 
-        {/* 問題一覧：左右2列で縦に並べる */}
-        <div className="flex gap-4 mb-8">
+
+        {/* PC：左右2列 / モバイル：縦1列 */}
+        <div className="hidden md:flex gap-4 mb-8">
           <div className="flex-1 flex flex-col gap-4">
             {leftQuestions.map((qNum) => renderQuestionCard(qNum))}
           </div>
           <div className="flex-1 flex flex-col gap-4">
             {rightQuestions.map((qNum) => renderQuestionCard(qNum))}
           </div>
+        </div>
+
+        {/* モバイル：縦1列 */}
+        <div className="flex flex-col gap-4 mb-8 md:hidden">
+          {questionNumbers.map((qNum) => renderQuestionCard(qNum))}
         </div>
 
         {/* 正解マスタアップロード（uploadモードのみ） */}
